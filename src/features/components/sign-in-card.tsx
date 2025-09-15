@@ -19,11 +19,18 @@ interface SignInCardProps  {
 };
 export const SignInCard = ({setState}:SignInCardProps) => {
     const { signIn } = useAuthActions();
-    const handleProiderSignIn =(value: "github"|"google") => {
-        signIn(value)
-    }
+    
     const [email , setEmail] = useState("");
     const [password , setPassword] = useState("");
+    const [pending , setPending]= useState(false);
+    const handleProiderSignIn =(value: "github"|"google") => {
+        setPending(true),
+        signIn(value)
+        .finally(()=> {
+            setPending(false)
+
+        })
+    }
 
     return (
         <Card className="w-full h-full p-8"> 
@@ -37,20 +44,20 @@ export const SignInCard = ({setState}:SignInCardProps) => {
            <CardContent className="sapce-y-5 px-0 pb-0" >
                 <form className="space-y-2.5">
                     <Input 
-                    disabled={false}
+                    disabled={pending}
                     value="email"
                     onChange={(e)=>{setEmail(e.target.value)}} 
                     placeholder="Email"
                     type="email"
                     required/>
                     <Input 
-                    disabled={false}
+                    disabled={pending}
                     value="password"
                     onChange={(e)=>{setPassword(e.target.value)}} 
                     placeholder="Password"
                     type="password"
                     required/>
-                    <Button type="submit" disabled={false} size="lg" className="w-full">
+                    <Button type="submit" disabled={pending} size="lg" className="w-full">
                             Continue
                     </Button>
                 </form>
@@ -58,7 +65,7 @@ export const SignInCard = ({setState}:SignInCardProps) => {
                 <Separator className="my-5 bg-gray-600" />
 
                 <div className="flex flex-col gap-y-3">
-                    <Button  disabled={false} onClick={()=>handleProiderSignIn("google")} variant="outline" size="lg" className="w-full relative ">
+                    <Button  disabled={pending} onClick={()=>handleProiderSignIn("google")} variant="outline" size="lg" className="w-full relative ">
                         <FcGoogle className="size-5 absolute top-3  left-2.5 " />
                         Continue with Google 
                     </Button>
