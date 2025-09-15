@@ -11,14 +11,17 @@ import {FaGithub } from  "react-icons/fa"
 import { SignInFlow } from "../types"
 import { useState } from "react"
 
-
+import { useAuthActions } from "@convex-dev/auth/react";
 
 interface SignInCardProps  {
     setState: (state:SignInFlow) => void ;
 
 };
 export const SignInCard = ({setState}:SignInCardProps) => {
-    
+    const { signIn } = useAuthActions();
+    const handleProiderSignIn =(value: "github"|"google") => {
+        signIn(value)
+    }
     const [email , setEmail] = useState("");
     const [password , setPassword] = useState("");
 
@@ -55,13 +58,15 @@ export const SignInCard = ({setState}:SignInCardProps) => {
                 <Separator className="my-5 bg-gray-600" />
 
                 <div className="flex flex-col gap-y-3">
-                    <Button  disabled={false} onClick={()=>{}} variant="outline" size="lg" className="w-full relative ">
+                    <Button  disabled={false} onClick={()=>handleProiderSignIn("google")} variant="outline" size="lg" className="w-full relative ">
                         <FcGoogle className="size-5 absolute top-3  left-2.5 " />
                         Continue with Google 
                     </Button>
-                    <Button  onClick={()=>{}} variant="outline" size="lg" className="w-full relative">
+                    <Button  onClick={() =>handleProiderSignIn("github")} variant="outline" size="lg" className="w-full relative">
                         <FaGithub  className="size-5 absolute  top-3  left-2.5  " />
                         Continue with Github
+                        
+                        
                     </Button>
 
                 </div>
