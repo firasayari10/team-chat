@@ -10,6 +10,7 @@ import {FcGoogle  } from  "react-icons/fc"
 import {FaGithub } from  "react-icons/fa"
 import { SignInFlow } from "../types"
 import { useState } from "react"
+import {TriangleAlert} from "lucide-react"
 
 import { useAuthActions } from "@convex-dev/auth/react";
 
@@ -22,7 +23,20 @@ export const SignInCard = ({setState}:SignInCardProps) => {
     
     const [email , setEmail] = useState("");
     const [password , setPassword] = useState("");
+    const [error, setError]= useState("");
     const [pending , setPending]= useState(false);
+    const onPasswordSignIn =(e:React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setPending(true);
+        signIn("password", {email , password , flow: "signIn"})
+        .catch(()=>{
+            setError("Invalid email or password ")
+        })
+        .finally(()=> {
+            setPending(false);
+        });
+
+    };
     const handleProiderSignIn =(value: "github"|"google") => {
         setPending(true),
         signIn(value)
@@ -40,19 +54,24 @@ export const SignInCard = ({setState}:SignInCardProps) => {
             use your email or another service to continue
         </CardDescription>
         </CardHeader>
-        
+        {!!error && ( 
+            <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x2 text-destructive mb-2">
+                <TriangleAlert className="size-4" />
+                <p>{error}</p>
+            </div>
+        )}
            <CardContent className="sapce-y-5 px-0 pb-0" >
-                <form className="space-y-2.5">
+                <form className="space-y-2.5" onSubmit={onPasswordSignIn}>
                     <Input 
                     disabled={pending}
-                    value="email"
+                    value={email}
                     onChange={(e)=>{setEmail(e.target.value)}} 
                     placeholder="Email"
                     type="email"
                     required/>
                     <Input 
                     disabled={pending}
-                    value="password"
+                    value={password}
                     onChange={(e)=>{setPassword(e.target.value)}} 
                     placeholder="Password"
                     type="password"
