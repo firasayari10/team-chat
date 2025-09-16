@@ -8,7 +8,7 @@ import {Button} from "@/components/ui/button";
 import {Separator} from "@/components/ui/separator";
 import {FcGoogle  } from  "react-icons/fc";
 import {FaGithub } from  "react-icons/fa";
-import { SignInFlow } from "../types";
+import { SignInFlow } from "../../types";
 import {TriangleAlert} from "lucide-react";
 import {useState } from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
