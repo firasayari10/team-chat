@@ -14,10 +14,10 @@ import {Input} from"@/components/ui/input"
 import {Button} from "@/components/ui/button"
 import { useState } from "react";
 import { Id } from "../../../../convex/_generated/dataModel";
-
-
+import {useRouter} from "next/navigation"
+import {toast} from "sonner" ;
 export const  CreateWorkspaceModal = () => {
-
+    const router = useRouter();
     const [open , setOpen] = useCreateWorkspaceModal() ;
     const [name , setName] = useState("");
     const { mutate , isPending } = useCreateWorkspace() ;
@@ -25,6 +25,7 @@ export const  CreateWorkspaceModal = () => {
     
     const handleClose = () => {
         setOpen(false);
+        setName("");
     }
     
     
@@ -34,8 +35,11 @@ export const  CreateWorkspaceModal = () => {
     mutate(
       { name },
       {
-        onSuccess(data: Id<"workspaces"> | null) {
-          console.log(data);
+        onSuccess(id) {
+        toast.success("workspace created")
+          router.push(`/workspace/${id}`)
+          handleClose();
+        
         },
       }
     );

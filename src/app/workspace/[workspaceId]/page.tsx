@@ -6,12 +6,12 @@ interface WorkspaceIdPageProps {
 
 
 
-const WorkspaceIdPagePage = () => {
+const WorkspaceIdPage = ( {params}: WorkspaceIdPageProps) => {
     return (
         <div>
-
+                ID :{params.workspaceId}
         </div>
     )
 }
 
-export default WorkspaceIdPagePage ;
+export default WorkspaceIdPage ;
