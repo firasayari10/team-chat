@@ -27,11 +27,11 @@ export const WorspaceSwitcher = ()=> {
 
     return (
         <DropdownMenu >
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild>
                     <Button  className="size-9 relative overflow-hidden bg-[#ABABAD] hover:bg-[#ABABAD]/20 text-slate-800 font-semibold text-xl ">
                      {workspaceLoading ? ( <Loader className="size-5 animate-spin shrink-0" />) : ( workspace?.name.charAt(0).toUpperCase())}
                     </Button>
-                </DropdownMenuTrigger>
+                </DropdownMenuTrigger >
                 <DropdownMenuContent  className="w-64" align = "start" side="bottom">
                     <DropdownMenuItem  onClick={()=> { router.push(`/workspace/${workspaceId}`)}}
                     className="cursor-pointer flex-col justify-start items-start capitalize">
