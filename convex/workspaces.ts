@@ -1,6 +1,15 @@
 import {mutation, query } from "./_generated/server"
 import  {v} from "convex/values"
 import {auth} from "./auth"
+ export const generateCode  =() => {
+        const code = Array.from (
+            {length: 6},
+            ()=> "0123456789abcdefghijklmnoqrstuvwxyz"[Math.floor(Math.random( )*36)]
+        ).join("");
+        return code
+
+    }
+
 export const create = mutation({
     args: {
         name:v.string(),
@@ -11,14 +20,7 @@ export const create = mutation({
          throw new Error ( "unauthorized")
 
     }
-    const generateCode  =() => {
-        const code = Array.from (
-            {length: 6},
-            ()=> "0123456789abcdefghijklmnoqrstuvwxyz"[Math.floor(Math.random( )*36)]
-        ).join("");
-        return code
-
-    }
+    
     const  joinCode = generateCode();
     const workspaceId = await ctx.db.insert("workspaces", {
         name:args.name,
@@ -30,7 +32,12 @@ export const create = mutation({
         workspaceId,
         role:"admin"
     });
-    const workspace = await ctx.db.get(workspaceId)
+    await ctx.db.insert("channels", {
+        name:"general",
+        workspaceId
+
+
+    })
     return workspaceId;
 
     }
