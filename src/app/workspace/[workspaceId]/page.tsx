@@ -1,24 +1,71 @@
 
 "use client"
 
+import { useCreateChannel } from "@/features/channels/api/use-create-channel";
+import { useGetChannels } from "@/features/channels/api/use-get-channels";
+import { useCreateChannelModal } from "@/features/channels/store/use-create-channel-modal";
+import { useCurrentMember } from "@/features/members/api/use-current-member";
+import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
 import { useWorkspaceId } from "@/hooks/use-workspace-id"
-import {useParams} from "next/navigation"
-interface WorkspaceIdPageProps {
-    params:{
-        workspaceId:string,
-    }
-}
+import { Loader, TriangleAlert } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo } from "react";
+
+
 
 
 
 const WorkspaceIdPage = ( ) => {
     const workspaceId = useWorkspaceId();
+    const router= useRouter();
+    const [open,setOpen]= useCreateChannelModal();
+    const { data: member , isLoading:memberLoading}=useCurrentMember({workspaceId})
+    const {data: workspace , isLoading:workspaceLoading} =useGetWorkspace({id:workspaceId});
+    const isAdmin = useMemo(()=> member?.role === "admin" , [member?.role])
+    const {data:channels , isLoading :channelsLoading} = useGetChannels({workspaceId,})
+    const channelId = useMemo(()=> channels?.[0]?._id,[channels]);
+    useEffect(()=>{
+        
+        if (workspaceLoading || channelsLoading || !workspace ||memberLoading || !member) return ;
+        if(channelId){
+            router.push(`/workspace/${workspaceId}/channel/${channelId}`);
 
-    return (
-        <div>
-               worksapce id page 
-        </div>
-    )
+        }
+        else if (!open && isAdmin){
+            setOpen(true);
+        }
+    },[channelId,workspaceLoading,channelsLoading,workspace,open , setOpen , memberLoading , member , isAdmin]);
+     if(workspaceLoading || channelsLoading) {
+        return (
+            <div className="h-full flex-1 flex items-center justify-center flex-col gap-2">
+                <Loader className="size-6 animate-spoin text-muted-foreground" />
+
+            </div>
+        )
+     }
+     if(!workspace){
+        return (
+            <div className="h-full flex-1 flex items-center justify-center flex-col gap-2">
+                <TriangleAlert className="size-6  text-muted-foreground" />
+                <span className="text-sm text-muted-foreground" >
+                    Workspace not found !!
+                </span>
+
+            </div>
+        )
+     }
+     return (
+            <div className="h-full flex-1 flex items-center justify-center flex-col gap-2">
+                <TriangleAlert className="size-6  text-muted-foreground" />
+                <span className="text-sm text-muted-foreground" >
+                    No channel found
+                </span>
+
+            </div>
+        )
+            
+        
+    return null ;
 }
 
 export default WorkspaceIdPage ;
