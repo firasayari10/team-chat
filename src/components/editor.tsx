@@ -1,5 +1,5 @@
 import Quill, { QuillOptions } from "quill";
-import "quill/dist/quill.snow.css";
+import 'react-quill/dist/quill.snow.css';
 import { MutableRefObject, useEffect, useLayoutEffect, useRef } from "react";
 import { Button } from "./ui/button";
 import { ImageIcon, Smile, Send } from "lucide-react";
