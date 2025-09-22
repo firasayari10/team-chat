@@ -26,7 +26,7 @@ export const InviteModal = (
     const handleNewCode = async() => {
         const ok = await confirm() ;
         if(!ok) return ;
-        
+
         mutate({workspaceId} , {
             onSuccess:() => {
                 toast.success("Invite code regenerated")
@@ -53,10 +53,10 @@ export const InviteModal = (
         <DialogContent>
             <DialogHeader>
                 <DialogTitle>
-                    invite people to  {name} 
+                    Invite people to  {name} 
                 </DialogTitle>
                 <DialogDescription>
-                    use this coded to invite people to your workspace 
+                    Use this coded to invite people to your workspace 
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-y-4 items-center justify-center py-10">
