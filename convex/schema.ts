@@ -29,6 +29,16 @@ const schema = defineSchema({
         }
     )
     .index ("by_workspace_id",["workspaceId"]),
+    messages: defineTable({
+        body:v.string(),
+        image:v.optional(v.id("_storage")),
+        memberId: v.id("members"),
+        workspaceId: v.id("workspaces"),
+        channelId: v.optional(v.id("channels")),
+        parentMessageId:v.optional(v.id("messages")),
+        //conv id
+        updatedAt: v.number(),
+    })
     
 });
 
