@@ -5,7 +5,14 @@ import {api} from "../../../../convex/_generated/api";
 import {Id} from "../../../../convex/_generated/dataModel";
 
 
-type RequestType = { body: string , image?: Id<"_storage"> , workspaceId: Id<"workspaces"> , channelId?: Id<"channels"> ,parentMessageIDd?: Id<"messages">} 
+type RequestType = { body: string ,
+     image?: Id<"_storage"> ,
+      workspaceId: Id<"workspaces"> , 
+      channelId?: Id<"channels"> ,
+      parentMessageId?: Id<"messages">,
+      conversationId?: Id<"conversations">
+      
+    } 
 type ResponseType = Id<"messages">| null;
 
 
@@ -14,6 +21,7 @@ type Options ={
     onError?:(error: Error)=> void;
     onSettled?:()=> void;
     throwError?: boolean;
+    
 
 }
 
