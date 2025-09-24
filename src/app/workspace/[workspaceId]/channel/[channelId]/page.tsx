@@ -42,7 +42,8 @@ const ChannelIdPage = () => {
       data={results}
       loadMore={loadMore}
       isLoadingMore={status === "LoadingMore"}
-      canLoadMore = {status === "CanLoadMore"} />
+      canLoadMore = {status === "CanLoadMore"} 
+      variant="channel"/>
 
       
       <div className="p-4 border-t">
