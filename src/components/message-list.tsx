@@ -113,8 +113,8 @@ export const MessageList = ({
                 ))
                 }
                 <div
-                className="h-1"
-                ref={(el)=> {
+                    className="h-1"
+                    ref={(el)=> {
                     if(el) {
                         const observer = new IntersectionObserver(
                             ([entry] ) => {

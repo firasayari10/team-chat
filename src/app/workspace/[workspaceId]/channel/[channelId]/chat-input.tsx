@@ -95,9 +95,9 @@ export const ChatInput =({placeholder}:ChatInputProps) => {
     key={editorKey}
     placeholder={placeholder}
     onSubmit={handleSubmit}
-    disabled={false}
+    disabled={isPending}
     innerRef={ editorRef}/>
-</div>
+    </div>
 
     )
 }
