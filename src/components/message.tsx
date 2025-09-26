@@ -33,7 +33,7 @@ interface MessageProps{
     body : Doc<"messages">["body"];
     image: string|undefined | null;
     createdAt : Doc <"messages">["_creationTime"];
-    updatedAt: Doc <"messages">["updatedAt"];
+    updatedAt?: Doc <"messages">["updatedAt"];
     isEditing:boolean;
     isCompact?:boolean;
     setEditingId: (id: Id<"messages"> | null ) => void ;

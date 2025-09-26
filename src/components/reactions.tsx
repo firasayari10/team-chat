@@ -29,7 +29,7 @@ export const Reactions = ({
     return(
         <div className="flex items-center gap-1 mt-1 mb-1">
             {data.map((reaction) => (
-                <Hint label={`${reaction.count} ${reaction.count == 1 ? "person" : "people"} reacted with ${reaction.value}`}>
+                <Hint label={`${reaction.count} ${reaction.count == 1 ? "person" : "people"} reacted with ${reaction.value}`} key={reaction.value}>
                 
                 <button onClick={()=> onChange(reaction.value)} className={cn(" h-6 px-2 rounded-full bg-slate-200/70 border border-transparent text-slate-800 flex items-center gap-x-1",
                     reaction.memberIds.includes(currentMemberId)&& 
