@@ -13,47 +13,38 @@ import {useRouter} from "next/navigation"
 import { cn} from "@/lib/utils"
 import { useEffect, useMemo } from "react"
 
-
-
 const JoinPage = () => {
-    const router =useRouter() ;
+    const router = useRouter();
 
     const workspaceId = useWorkspaceId()
     const {data , isLoading} = useGetWorkspaceInfo({id:workspaceId})
     const {mutate , isPending} = useJoin()
-    const isMember = useMemo(()=> data?.isMember, [data?.isMember]) ; 
-    useEffect(()=> {
-        if(isMember) {
-            router.push(`/workspace/${workspaceId}`);
-        }
-    },[isMember,router,workspaceId])
+    const isMember = useMemo(()=> data?.isMember, [data?.isMember]);
 
-
-
-    const handleComplete = (value : string) => {
-        mutate({workspaceId,joinCode:value},
+    const handleComplete = (value: string) => {
+        mutate({workspaceId, joinCode: value},
             {
                 onSuccess:(id) => {
                     router.push(`/workspace/${id}`);
-                    toast.success("Workspace joined successfully ! ");
+                    toast.success("Workspace joined successfully!");
                 },
                 onError:()=>{
-                    toast.success("Failed to join workspace !");
+                    toast.error("Failed to join workspace!");
                 }
             }
         )
-
     }
-    if(isLoading) 
-    {
-        <div className="h-full flex items-center justify-center ">
-            <Loader className="size-6 animate-spin"/>
 
-        </div>
+    if(isLoading) {
+        return (
+            <div className="h-full flex items-center justify-center">
+                <Loader className="size-6 animate-spin"/>
+            </div>
+        )
     }
    
     return (
-        <div className="h-full flex flex-col gap-y-8 items-center justify-center bg-white p-8 rounded-lg shadow-md ">
+        <div className="h-full flex flex-col gap-y-8 items-center justify-center bg-white p-8 rounded-lg shadow-md">
             <Image src="/logo.svg" width={60} height={60} alt="logo"/>
             <div className="flex flex-col gap-y-4 items-center justify-center max-w-md">
                 <div className="flex flex-col gap-y-2 items-center justify-center">
@@ -64,32 +55,28 @@ const JoinPage = () => {
                         Enter workspace code to Join
                     </p>
                 </div>
-                <VerificationInput  onComplete={handleComplete}
-                classNames={
-                    {
-                        container: cn("flex gap-x-2",isPending && "opacity-50 cursor-not-allowed"),
-                        character: "uppercase h-auto rounded-md border border-gray-300 flex items-center justify-center text-lg font-medium text-gray-500 ",
-                        characterInactive:"bg-muted",
-                        characterSelected:"bg-white text-black",
-                        characterFilled:"bg-white text-black" ,
-                    }
-                }
-                autoFocus
-                length={6}
+                <VerificationInput  
+                    onComplete={handleComplete}
+                    classNames={{
+                        container: cn("flex gap-x-2", isPending && "opacity-50 cursor-not-allowed"),
+                        character: "uppercase h-auto rounded-md border border-gray-300 flex items-center justify-center text-lg font-medium text-gray-500",
+                        characterInactive: "bg-muted",
+                        characterSelected: "bg-white text-black",
+                        characterFilled: "bg-white text-black",
+                    }}
+                    autoFocus
+                    length={6}
                 />
-
             </div>
             <div className="flex gap-x-4">
                 <Button size="lg" variant="outline" asChild>
-                    <Link href="/" >
-                    Back to home 
+                    <Link href="/">
+                        Back to home 
                     </Link>
-
                 </Button>
-
             </div>
         </div>
     )
 }
 
-export default JoinPage ;
+export default JoinPage;
