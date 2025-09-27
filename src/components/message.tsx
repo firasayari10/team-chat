@@ -1,3 +1,4 @@
+"use client"
 import { format , isToday , isYesterday } from "date-fns";
 import { Id , Doc } from "../../convex/_generated/dataModel";
 import dynamic from "next/dynamic";
@@ -15,6 +16,7 @@ import { useToggleMessage } from "@/features/reactions/api/use-toggle-reaction";
 import { Reactions } from "./reactions";
 import { usePanel } from "@/hooks/use-panel";
 import { ThreadBar } from "./thread-bar";
+import { useEffect, useState } from "react";
 
 
 const Renderer= dynamic(()=> import("@/components/renderer" ), { ssr : false});
@@ -44,8 +46,9 @@ interface MessageProps{
     threadName?:string;
     threadTimestamp?:number;
 }
+
 const formatFullTime = (date: Date) => {
-    return `${isToday(date) ? "Today" : isYesterday(date)?"yesterday" : format(date,"MMM d ,yyyy") } at ${format(date,"h:mm:ss a")}`;
+    return `${isToday(date) ? "Today" : isYesterday(date)?"Yesterday" : format(date,"MMM d, yyyy") } at ${format(date,"h:mm:ss a")}`;
 }
 
 export const Message = ({
@@ -53,7 +56,7 @@ export const Message = ({
     isAuthor,
     memberId,
     authorImage,
-    authorName="member",
+    authorName="Member",
     reactions,
     body,
     image,
@@ -70,13 +73,19 @@ export const Message = ({
 
 
 }:MessageProps)=> {
-    const {parentMessageId,onOpenMessage , onClose} = usePanel();
+    const [isClient, setIsClient] = useState(false);
+    
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    const {parentMessageId,onOpenMessage , onOpenProfile,onClose} = usePanel();
     const { mutate: updateMessage , isPending: isUpdatingMesage} = useUpdateMessage();
     const {mutate: removeMessage , isPending : isRemovingMessage}=useRemoveMessage();
     const  {mutate : toggleReaction , isPending: isTogglingReaction}= useToggleMessage()
 
     const [ConfirmDialog , confirm] = useConfirm("Are you sure you want to delete this message ?" , "This action is irreversible")
-    const isPending = isUpdatingMesage ;
+    const isPending = isUpdatingMesage || isTogglingReaction;
 
     const handleReaction =( value: string)=> {
         toggleReaction({messageId: id , value},{
@@ -107,7 +116,7 @@ export const Message = ({
         if(!ok) return;
         removeMessage({id}, {
             onSuccess:()=> {
-                toast.success("Message Deleted Successfuly")
+                toast.success("Message Deleted Successfully")
                 if(parentMessageId === id)
                 {
                     onClose();
@@ -115,12 +124,33 @@ export const Message = ({
             }
             ,
             onError:() => {
-                toast.error("Error deleting Mesage ")
+                toast.error("Error deleting Message ")
 
             }
         }) 
     }
     
+    if (!isClient) {
+        return (
+            <div className="flex flex-col gap-2 p-1.5 px-5">
+                <div className="flex items-start gap-2">
+                    {!isCompact && (
+                        <Avatar className="mr-2">
+                            <AvatarFallback className="bg-sky-500 text-white text-sm">
+                                {authorName?.charAt(0).toUpperCase() || "M"}
+                            </AvatarFallback>
+                        </Avatar>
+                    )}
+                    <div className="flex flex-col w-full">
+                        <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                        <div className="h-20 bg-gray-100 rounded"></div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const createdAtDate = new Date(createdAt);
 
     if (isCompact) {
             return (
@@ -136,9 +166,9 @@ export const Message = ({
                 >
                 <div className="flex items-start gap-2">
                     <div className="w-[40px] text-center opacity-0 group-hover:opacity-100">
-                    <Hint label={formatFullTime(new Date(createdAt))}>
+                    <Hint label={formatFullTime(createdAtDate)}>
                         <button className="text-xs text-muted-foreground leading-[22px] hover:underline">
-                        {format(new Date(createdAt), "hh:mm")}
+                        {format(createdAtDate, "hh:mm")}
                         </button>
                     </Hint>
                     </div>
@@ -197,7 +227,7 @@ export const Message = ({
             "flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/55 group relative" , 
             isEditing && "bg-[#f2c74433] hover:bg-[#f2c74433]",isRemovingMessage && "bg-rose-500/50 transform transition-all scale-y-0 origin-bottom duration-200")}>
             <div className="flex items-start gap-2">
-                <button >
+                <button onClick={()=>onOpenProfile(memberId)} >
                     <Avatar className="mr-2">
                     <AvatarImage  src={authorImage} />
                         <AvatarFallback className=" bg-sky-500 text-white text-sm">
@@ -218,16 +248,16 @@ export const Message = ({
                     (
                         <div className="flex flex-col w-full overflow-hidden">
                     <div className="text-sm">
-                        <button className="font-bold text-primary hover:underline" onClick={()=>{}}>
+                        <button className="font-bold text-primary hover:underline" onClick={()=>onOpenProfile(memberId)}>
                             {authorName}
 
                         </button>
                         <span >
                             &nbsp;&nbsp;
                         </span>
-                        <Hint label={formatFullTime(new Date(createdAt))} >
+                        <Hint label={formatFullTime(createdAtDate)} >
                         <button className="text-xs text-muted-foreground hover:underline">
-                            {format(new Date(createdAt),"h:mm a")}
+                            {format(createdAtDate,"h:mm a")}
 
                         </button>
                         </Hint>
@@ -274,5 +304,3 @@ export const Message = ({
         </>
 )
 }
-
-
