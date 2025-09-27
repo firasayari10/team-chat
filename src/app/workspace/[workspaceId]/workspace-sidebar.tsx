@@ -11,9 +11,11 @@ import { UserItem } from "./user-item";
 import { useCreateChannelModal } from "@/features/channels/store/use-create-channel-modal";
 
 import{useChannelId} from "@/hooks/use-channelId"
+import { useMemberId } from "@/hooks/use-member-id";
 
 
 export const WorkspaceSideBar =()=> {
+    const memberId = useMemberId();
     const channelId = useChannelId();
     const  workspaceId  =useWorkspaceId();
     const [_open , setOpen]= useCreateChannelModal();
@@ -91,7 +93,9 @@ export const WorkspaceSideBar =()=> {
                     key={item._id}
                     id={item._id}
                     label={item.user.name}
-                    image={item.user.image} />
+                    image={item.user.image} 
+                    variant={item._id === memberId ? "active" : "default"}
+                    />
                 ))}
                 </WorkspaceSection>
                 
