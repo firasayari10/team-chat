@@ -11,25 +11,21 @@ import { ConversationHero } from "./conversation-hero";
 
 const TIME_THRESHOLD = 5;
 interface MessageListProps {
-     
-
     memberName?: string ;
     memberImage?: string ;
     channelName?:string;
     channelCreationTime?:number;
     variant?:"channel" | "thread" | "conversation";
-
     data: GetMessagesReturnType | undefined;
     loadMore: () => void ;
     isLoadingMore: boolean ;
     canLoadMore: boolean;
-
 };
 
 const formatDateLabel = (dateStr: string) => {
     const date = new Date(dateStr);
-    if (isToday(date)) return "Todday";
-    if(isYesterday(date)) return "Yesturday";
+    if (isToday(date)) return "Today";
+    if(isYesterday(date)) return "Yesterday";
     return format ( date , "EEEE , MMMM d ");
 }
 
@@ -47,6 +43,16 @@ export const MessageList = ({
     const [editingId, setEditingId] = useState< Id<"messages">|null>(null);
     const workspaceId = useWorkspaceId();
     const {data:currentMember}= useCurrentMember({workspaceId})
+
+    // Debug logging for messages
+    console.log('MessageList data:', data?.map(msg => ({
+        id: msg._id,
+        authorImage: msg.user?.image,
+        authorName: msg.user?.name,
+        threadImage: msg.threadImage,
+        threadName: msg.threadName,
+        threadCount: msg.threadCount
+    })));
 
     const groupedMessages = data?.reduce(
         ( groups , message) => {
@@ -83,13 +89,15 @@ export const MessageList = ({
                                 new Date(prevMessage._creationTime)
                             )< TIME_THRESHOLD ;
 
+                            
+
                             return (
                                 <Message
                                 key={message._id}
                                 id={message._id}
                                 memberId={message.memberId}
-                                authorImage={message.user.image}
-                                authorName={message.user.name}
+                                authorImage={message.user?.image}
+                                authorName={message.user?.name}
                                 isAuthor={message.memberId === currentMember?._id}
                                 reactions={message.reactions}
                                 body={message.body}
@@ -102,9 +110,8 @@ export const MessageList = ({
                                 hideThreadButton={variant==="thread"}
                                 threadCount={message.threadCount}
                                 threadImage={message.threadImage}
+                                threadName={message.threadName}
                                 threadTimestamp={message.threadTimestamp}
-                                
-                                
                                 
                                 />
                             )

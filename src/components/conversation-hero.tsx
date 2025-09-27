@@ -35,7 +35,7 @@ export const ConversationHero =({
             </div>
                     
                     <p className="font-normal text-slate-800 mb-4">
-                    This conversation isq just between you and <strong> {name }</strong>
+                    This conversation is just between you and <strong> {name }</strong>
             
                     </p>
         
