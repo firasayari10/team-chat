@@ -2,8 +2,6 @@
 import {useMutation } from "convex/react"
 import {useCallback, useMemo, useState} from "react"
 import {api} from "../../../../convex/_generated/api";
-import { ConvexProvider, ConvexReactClient } from "convex/react";
-import {Id} from "../../../../convex/_generated/dataModel";
 
 
 
@@ -35,7 +33,7 @@ export const useUploadGenerateUrl = () => {
 
     const mutation = useMutation(api.upload.generateUploadUrl);
 
-    const mutate = useCallback(async(_values: {} ,options?: Options)=> {
+    const mutate = useCallback(async(_values: Record<string, never> ,options?: Options)=> {
         try  {
 
             setData(null);
