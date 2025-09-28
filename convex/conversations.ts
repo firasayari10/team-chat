@@ -31,7 +31,7 @@ export const createOrGet = mutation({
             throw new Error ("Member not Found ");
         }
 
-        const exisitngConversation = await ctx.db 
+        const existingConversations = await ctx.db 
         .query("conversations")
         .filter((q)=> q.eq(q.field("workspaceId"), args.workspaceId))
         .filter((q)=> 
@@ -42,17 +42,23 @@ export const createOrGet = mutation({
 
                 ),
                 q.and(
-                    q.eq(q.field("memberTwoId"),otherMember._id),
-                    q.eq(q.field("memberOneId"),currentMember._id),
+                    q.eq(q.field("memberOneId"),otherMember._id),
+                    q.eq(q.field("memberTwoId"),currentMember._id),
 
                 )
             )
     )
-    .unique();
+    .collect();
 
-    if(exisitngConversation)
+    if(existingConversations.length > 0)
     {
-        return exisitngConversation._id
+        if(existingConversations.length > 1) {
+            const keepConversation = existingConversations[0];
+            for(let i = 1; i < existingConversations.length; i++) {
+                await ctx.db.delete(existingConversations[i]._id);
+            }
+        }
+        return existingConversations[0]._id;
     }
 
     const conversationId = await ctx.db.insert("conversations",{

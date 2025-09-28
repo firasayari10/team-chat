@@ -30,7 +30,7 @@ export const Toolbar =({
     return  ( 
     <div className="absolute top-0 right-5"> 
         <div className="group-hover:opacity-100 opacity-0 transition-opacity bg-white rounded-md shadow-sm">
-            <EmojiPopover hint="Add a reaction" onEmojiSelect={(emoji) => handleReaction(emoji.native)}>
+            <EmojiPopover hint="Add a reaction" onEmojiSelect={(emoji) => handleReaction(emoji)}>
                 <Button 
                     variant="ghost"
                     size="iconSm"

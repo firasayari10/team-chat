@@ -136,9 +136,9 @@ const Editor = (
             toolbarElement.classList.toggle("hidden");
         }
     }
-    const onEmojiSelect =(emoji:any)=> {
+    const onEmojiSelect =(emojiValue:string)=> {
         const quill = quillRef.current ;
-        quill?.insertText(quill?.getSelection()?.index || 0 , emoji.native)
+        quill?.insertText(quill?.getSelection()?.index || 0 , emojiValue)
 
     }
 

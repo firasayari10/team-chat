@@ -131,25 +131,25 @@ export const Message = ({
     }
     
     if (!isClient) {
-        return (
-            <div className="flex flex-col gap-2 p-1.5 px-5">
-                <div className="flex items-start gap-2">
-                    {!isCompact && (
-                        <Avatar className="mr-2">
-                            <AvatarFallback className="bg-sky-500 text-white text-sm">
-                                {authorName?.charAt(0).toUpperCase() || "M"}
-                            </AvatarFallback>
-                        </Avatar>
-                    )}
-                    <div className="flex flex-col w-full">
-                        <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
-                        <div className="h-20 bg-gray-100 rounded"></div>
-                    </div>
+    return (
+        <div className="flex flex-col gap-2 p-1.5 px-5">
+            <div className="flex items-start gap-2">
+                {!isCompact && (
+                    <Avatar className="mr-2">
+                        <AvatarImage src={authorImage} />
+                        <AvatarFallback className="bg-sky-500 text-white text-sm">
+                            {authorName?.charAt(0).toUpperCase() || "M"}
+                        </AvatarFallback>
+                    </Avatar>
+                )}
+                <div className="flex flex-col w-full">
+                    <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                    <div className="h-20 bg-gray-100 rounded"></div>
                 </div>
             </div>
-        );
-    }
-
+        </div>
+    );
+}
     const createdAtDate = new Date(createdAt);
 
     if (isCompact) {

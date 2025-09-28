@@ -1,19 +1,27 @@
 import { Button } from "@/components/ui/button";
 import {Id}from "../../../../convex/_generated/dataModel"
 import { useGetMember } from "../api/use-get-member";
-import { AlertTriangle, ChevronDown, ChevronDownIcon, Loader, MailIcon, XIcon } from "lucide-react";
+import { AlertTriangle,  ChevronDownIcon, Loader, MailIcon, XIcon } from "lucide-react";
 import {Avatar,AvatarFallback,AvatarImage} from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useUpdateMember } from "../api/use-update-member";
 import { useRemoveMember } from "../api/use-remove-member";
 import { useCurrentMember } from "../api/use-current-member";
-import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
+
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import {toast} from "sonner"
-import { update } from "../../../../convex/channels";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem
+} from "@/components/ui/dropdown-menu"
+
 import { useConfirm } from "@/hooks/use-confirm";
 import { useRouter } from "next/navigation";
+
 interface ProfileProps {
     memberId:Id<"members">;
     onClose:()=>void;
@@ -144,14 +152,41 @@ export const Profile=({
             </p>
             {currentMember?.role === "admin" && currentMember?._id !== memberId ? (
                 
-                <div className="flex items-center gap-2 mt-4">
-                  <Button className="w-full capitalize " variant="outline">
+               <div className="flex items-center gap-2 mt-4 w-full">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button className="capitalize w-1/2" variant="outline">
+                          {member.role} <ChevronDownIcon className="size-4 ml-2" />
+                      </Button>
+
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-full">
+                      <DropdownMenuRadioGroup
+                      value={member.role}
+                      onValueChange={(role)=> onUpdate(role as "admin" | "member")}>
+                        <DropdownMenuRadioItem value="admin">
+                          Admin
+
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="member">
+                          Member
+
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+
+                    </DropdownMenuContent>
+                      
+                  </DropdownMenu>
+                <Button className="capitalize w-1/2" variant="outline">
                   {member.role} <ChevronDownIcon className="size-4 ml-2" />
                 </Button>
-                <Button variant="outline" className="w-full" onClick={onRemove}>
+                <Button className="w-1/2" variant="outline" onClick={onRemove}>
                   Remove
                 </Button>
-                </div>
+              </div>
+
+
+
 
             ): currentMember?._id === memberId && currentMember?.role !== "admin" ? (
               <div className="mt-4">
